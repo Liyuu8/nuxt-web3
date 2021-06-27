@@ -26,7 +26,12 @@
 </template>
 
 <script>
-export default {}
+export default {
+  mounted() {
+    console.log('Current Block Number')
+    this.$web3.eth.getBlockNumber().then(console.log)
+  },
+}
 </script>
 
 <style>
