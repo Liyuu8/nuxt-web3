@@ -2,34 +2,41 @@
   <div class="container">
     <div>
       <Logo />
-      <h1 class="title">nuxt-web3</h1>
+      <h1 class="title">nuxt-web3-contract</h1>
       <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
+        <input v-model="inputNumber" type="text" placeholder="input number" />
+        <button @click="setNumber()">Set Number to contract</button>
       </div>
+      <div class="links">
+        <button @click="getNumber()">Get Number from contract</button>
+      </div>
+      <div>Number:{{ number }}</div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      number: 0,
+      inputNumber: 0,
+    }
+  },
   mounted() {
     console.log('Current Block Number')
     this.$web3.eth.getBlockNumber().then(console.log)
+  },
+  methods: {
+    async getNumber() {
+      this.number = await this.$contract.methods.get().call()
+    },
+    async setNumber() {
+      const accounts = await this.$web3.eth.getAccounts()
+      return await this.$contract.methods
+        .set(this.inputNumber)
+        .send({ from: accounts[0] })
+    },
   },
 }
 </script>
